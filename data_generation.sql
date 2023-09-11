@@ -37,3 +37,19 @@ LATERAL (
 
 SELECT * FROM customers
 
+-- Insert accounts (1-2 per customer) with realistic 10-digit account numbers and random balances
+INSERT INTO accounts (customer_id, account_number, account_type, open_date, balance)
+SELECT 
+    c.customer_id,
+    LPAD((trunc(random() * 1e10)::bigint)::text, 10, '0') AS account_number,
+    (ARRAY['savings', 'current', 'loan'])[floor(random() * 3 + 1)],
+    c.signup_date + (trunc(random() * 90)::int) * INTERVAL '1 day',
+    round((1000 + random() * 499000)::numeric, 2)
+FROM customers c
+JOIN generate_series(1, 2) AS dup(n) ON true
+WHERE random() < 0.75		-- Around 75% of customers get a second account
+ORDER BY c.customer_id
+LIMIT 1000;
+
+SELECT * FROM accounts
+
