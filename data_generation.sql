@@ -53,3 +53,26 @@ LIMIT 1000;
 
 SELECT * FROM accounts
 
+-- Insert 1000 well-randomized transactions
+INSERT INTO transactions (account_id, transaction_type, amount, transaction_date, description)
+SELECT 
+    t.account_id,
+    t.transaction_type,
+    t.amount,
+    t.transaction_date,
+    d.description
+FROM (
+    SELECT 
+        a.account_id,
+        -- Randomly assign credit or debit
+        CASE 
+            WHEN random() < 0.5 THEN 'debit' 
+            ELSE 'credit' 
+        END AS transaction_type,
+        -- Random amount between 500 and 250,000
+        ROUND((500 + random() * 249500)::numeric, 2) AS amount,
+        -- Random date within past 2 years
+        NOW() - (trunc(random() * 730) || ' days')::INTERVAL AS transaction_date
+    FROM accounts a,
+         generate_series(1, 10) gs
+) t
