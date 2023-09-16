@@ -76,3 +76,42 @@ FROM (
     FROM accounts a,
          generate_series(1, 10) gs
 ) t
+-- Attach description based on type
+JOIN LATERAL (
+    SELECT 
+        CASE 
+            WHEN t.transaction_type = 'credit' THEN
+                (ARRAY[
+                    'Salary credited',
+                    'Bank transfer from GTBank',
+                    'Credit alert from Zenith',
+                    'Reversal of failed transaction',
+                    'Loan disbursement',
+                    'Wallet top-up',
+                    'Refund from vendor',
+                    'POS reversal',
+                    'Received from customer',
+                    'Online payment received',
+                    'Cash deposit'
+                ])[FLOOR(random() * 11 + 1)::int]
+            ELSE
+                (ARRAY[
+                    'POS payment at Shoprite',
+                    'MTN Airtime recharge',
+                    'Fuel purchase at Mobil',
+                    'Electricity bill payment',
+                    'Loan EMI debit',
+                    'House rent payment',
+                    'Online purchase at Jumia',
+                    'Cash withdrawal from ATM',
+                    'Subscription payment',
+                    'Insurance premium debit',
+                    'Bank transfer to Fidelity Bank'
+                ])[FLOOR(random() * 11 + 1)::int]
+        END AS description
+) d ON TRUE
+ORDER BY random()
+LIMIT 1000;
+
+SELECT * FROM transactions
+
