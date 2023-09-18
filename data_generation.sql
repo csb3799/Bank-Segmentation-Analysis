@@ -115,3 +115,10 @@ LIMIT 1000;
 
 SELECT * FROM transactions
 
+-- Confirm balanced transaction type
+SELECT 
+	transaction_type, 
+	COUNT(*) 
+FROM transactions 
+GROUP BY transaction_type;
+
