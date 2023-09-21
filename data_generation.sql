@@ -122,3 +122,12 @@ SELECT
 FROM transactions 
 GROUP BY transaction_type;
 
+-- See variety of descriptions
+SELECT 
+	description, 
+	COUNT(*) 
+FROM transactions 
+GROUP BY description 
+ORDER BY COUNT(*) DESC;
+
+
