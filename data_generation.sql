@@ -130,4 +130,8 @@ FROM transactions
 GROUP BY description 
 ORDER BY COUNT(*) DESC;
 
+-- Count total rows
+SELECT 
+	COUNT(*) 
+FROM transactions;
 
