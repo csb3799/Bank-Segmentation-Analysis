@@ -23,3 +23,16 @@ WHERE t.transaction_type = 'credit'
 GROUP BY month
 ORDER BY month;
 
+-- 3. Most Active Accounts by Number of Transactions
+SELECT 
+    t.account_id,
+    c.name,
+    COUNT(*) AS transaction_count
+FROM transactions t
+JOIN accounts a ON t.account_id = a.account_id
+JOIN customers c ON a.customer_id = c.customer_id
+GROUP BY t.account_id, c.name
+ORDER BY transaction_count DESC
+LIMIT 10;
+
+-
