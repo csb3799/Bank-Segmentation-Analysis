@@ -35,4 +35,25 @@ GROUP BY t.account_id, c.name
 ORDER BY transaction_count DESC
 LIMIT 10;
 
--
+-- 4. MOST ACTIVE ACCOUNTS BY VOLUME
+SELECT 
+    t.account_id, 
+	c.name, 
+	a.account_number,
+    COUNT(*) AS transaction_count, 
+	SUM(t.amount) AS total_transaction,
+	ROUND(AVG(t.amount), 2) AS avg_transaction_size,
+
+	COUNT(CASE WHEN t.transaction_type = 'debit' THEN 1 END) AS debit_count,
+    COUNT(CASE WHEN t.transaction_type = 'credit' THEN 1 END) AS credit_count,
+    
+    SUM(CASE WHEN t.transaction_type = 'debit' THEN t.amount ELSE 0 END) AS total_debit_volume,
+    SUM(CASE WHEN t.transaction_type = 'credit' THEN t.amount ELSE 0 END) AS total_credit_volume
+	
+FROM transactions t
+JOIN accounts a ON t.account_id = a.account_id
+JOIN customers c ON a.customer_id = c.customer_id
+GROUP BY t.account_id, c.name, a.account_number
+ORDER BY transaction_count DESC
+LIMIT 10;
+
