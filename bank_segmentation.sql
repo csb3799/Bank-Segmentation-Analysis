@@ -78,4 +78,24 @@ FROM transactions t
 GROUP BY DATE_TRUNC('month', t.transaction_date)
 ORDER BY month;
 
--
+-- 6. Yearly Transaction Breakdown
+SELECT 
+    TO_CHAR(DATE_TRUNC('year', t.transaction_date), 'YYYY') AS year,
+    
+    COUNT(*) AS total_transactions,
+    
+    SUM(CASE WHEN t.transaction_type = 'debit' THEN 1 ELSE 0 END) AS debit_count,
+    SUM(CASE WHEN t.transaction_type = 'credit' THEN 1 ELSE 0 END) AS credit_count,
+    
+    SUM(CASE WHEN t.transaction_type = 'debit' THEN t.amount ELSE 0 END) AS total_debit_volume,
+    SUM(CASE WHEN t.transaction_type = 'credit' THEN t.amount ELSE 0 END) AS total_credit_volume,
+    
+    SUM(t.amount) AS total_transaction_volume,
+    
+    ROUND(AVG(t.amount), 2) AS avg_transaction_size
+
+FROM transactions t
+
+GROUP BY DATE_TRUNC('year', t.transaction_date)
+ORDER BY year;
+
