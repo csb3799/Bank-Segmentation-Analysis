@@ -99,3 +99,19 @@ FROM transactions t
 GROUP BY DATE_TRUNC('year', t.transaction_date)
 ORDER BY year;
 
+-- 7. Top 20 High-Value Customers (By Total Credit Amount)
+SELECT 
+	c.customer_id,
+	c.name,
+	c.gender,
+	c.city,
+	COUNT(t.transaction_id) AS credit_transaction_count,
+	SUM(t.amount) AS total_credits
+FROM transactions t
+JOIN accounts a ON t.account_id = a.account_id
+JOIN customers c ON a.customer_id = c.customer_id
+WHERE t.transaction_type = 'credit'
+GROUP BY c.customer_id, c.name, c.gender, c.city
+ORDER BY total_credits DESC
+LIMIT 20;
+
