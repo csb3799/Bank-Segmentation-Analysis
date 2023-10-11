@@ -115,3 +115,17 @@ GROUP BY c.customer_id, c.name, c.gender, c.city
 ORDER BY total_credits DESC
 LIMIT 20;
 
+-- 8. Dormant accounts (Customers Inactive in the Last 12 months)
+SELECT
+	c.customer_id,
+	c.name,
+	c.gender,
+	c.city,
+	MAX(transaction_date) AS last_transaction_date
+FROM customers c
+JOIN accounts a ON c.customer_id = a.customer_id
+LEFT JOIN transactions t ON a.account_id = t.account_id
+GROUP BY c.customer_id, c.name, c.gender, c.city
+HAVING MAX(transaction_date) < CURRENT_DATE - INTERVAL '12 months'
+ORDER BY MAX(transaction_date);
+
