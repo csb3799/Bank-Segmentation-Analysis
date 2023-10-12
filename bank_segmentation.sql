@@ -129,3 +129,14 @@ GROUP BY c.customer_id, c.name, c.gender, c.city
 HAVING MAX(transaction_date) < CURRENT_DATE - INTERVAL '12 months'
 ORDER BY MAX(transaction_date);
 
+-- 9. Single Product Customers (Customers with only one account)
+SELECT 
+	c.customer_id,
+	c.name,
+	a.account_type,
+	COUNT(account_id) AS total_accounts
+FROM customers c
+JOIN accounts a ON c.customer_id = a.customer_id
+GROUP BY c.customer_id, c.name, a.account_type
+HAVING COUNT(account_id) = 1;
+
