@@ -140,3 +140,12 @@ JOIN accounts a ON c.customer_id = a.customer_id
 GROUP BY c.customer_id, c.name, a.account_type
 HAVING COUNT(account_id) = 1;
 
+-- 10. Most Used Transaction Services
+SELECT 
+    description,
+    COUNT(*) AS transaction_count,
+    SUM(amount) AS total_amount
+FROM transactions
+GROUP BY description
+ORDER BY transaction_count DESC;
+
