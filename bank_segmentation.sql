@@ -149,3 +149,16 @@ FROM transactions
 GROUP BY description
 ORDER BY transaction_count DESC;
 
+-- 11. City-wise performance 
+SELECT 
+	c.city,
+	COUNT(DISTINCT c.customer_id) AS total_customers,
+	COUNT(transaction_id) AS total_transaction,
+	SUM(amount) AS total_transaction_amount,
+	ROUND(AVG(t.amount), 2) AS Avg_transaction_amount
+FROM customers c
+LEFT JOIN accounts a ON c.customer_id = a.customer_id
+LEFT JOIN transactions t ON a.account_id = t.account_id
+GROUP BY c.city
+ORDER BY total_transaction DESC;
+
