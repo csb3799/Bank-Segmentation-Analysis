@@ -162,3 +162,15 @@ LEFT JOIN transactions t ON a.account_id = t.account_id
 GROUP BY c.city
 ORDER BY total_transaction DESC;
 
+-- 12. Engagement by Region (Geo spread of Active/Dormant Accounts & Customers)
+SELECT 
+	c.city,
+	COUNT(DISTINCT c.customer_id) AS total_customers,
+	COUNT(DISTINCT a.account_id) AS total_accounts,
+	COUNT(CASE WHEN t.transaction_date > CURRENT_DATE - INTERVAL '12 months' THEN 1 END) AS active_accounts,
+	COUNT(CASE WHEN t.transaction_date < CURRENT_DATE - INTERVAL '12 months' THEN 1 END) AS dormant_accounts
+FROM customers c
+LEFT JOIN accounts a ON c.customer_id = a.customer_id
+LEFT JOIN transactions t ON a.account_id = t.transaction_id
+GROUP BY c.city
+ORDER BY total_customers DESC;
