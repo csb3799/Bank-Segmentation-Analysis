@@ -174,3 +174,24 @@ LEFT JOIN accounts a ON c.customer_id = a.customer_id
 LEFT JOIN transactions t ON a.account_id = t.transaction_id
 GROUP BY c.city
 ORDER BY total_customers DESC;
+
+-- Highest Spender by City
+WITH customer_spending AS (
+    SELECT 
+        c.customer_id,
+        c.name,
+        c.city,
+        SUM(t.amount) AS total_spent
+    FROM customers c
+    JOIN accounts a ON c.customer_id = a.customer_id
+    JOIN transactions t ON a.account_id = t.account_id
+    WHERE t.transaction_type = 'debit'
+    GROUP BY c.customer_id, c.name, c.city
+)
+
+SELECT DISTINCT ON (city)
+    city,
+    name,
+    total_spent
+FROM customer_spending
+ORDER BY city, total_spent DESC;
