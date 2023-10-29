@@ -7,3 +7,10 @@ CREATE TABLE customers (
 	city TEXT
 );
 
+CREATE TABLE accounts (
+    account_id SERIAL PRIMARY KEY,
+    customer_id INT REFERENCES customers(customer_id),
+    account_type VARCHAR(20) CHECK (account_type IN ('savings', 'current', 'loan')),
+    open_date DATE NOT NULL,
+    balance NUMERIC(12,2) DEFAULT 0
+);
