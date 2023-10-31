@@ -14,3 +14,6 @@ CREATE TABLE accounts (
     open_date DATE NOT NULL,
     balance NUMERIC(12,2) DEFAULT 0
 );
+ALTER TABLE accounts ADD COLUMN account_number TEXT;
+
+
