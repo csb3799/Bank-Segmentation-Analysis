@@ -16,4 +16,12 @@ CREATE TABLE accounts (
 );
 ALTER TABLE accounts ADD COLUMN account_number TEXT;
 
+CREATE TABLE transactions (
+    transaction_id SERIAL PRIMARY KEY,
+    account_id INT REFERENCES accounts(account_id),
+    transaction_date DATE NOT NULL,
+    amount NUMERIC(12,2) NOT NULL,
+    transaction_type VARCHAR(20),     
+    description VARCHAR(50) 
+);
 
